@@ -10,14 +10,13 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component("mQSend")
 public class MQSend implements JavaDelegate {
     @Autowired
     private ChildRepository repository;
     @Autowired
     private SendMessengerService service;
-    @Autowired
-    private TaskRepository taskRepository;
+
 
     @Override
     public void execute(DelegateExecution delegateExecution) throws Exception {

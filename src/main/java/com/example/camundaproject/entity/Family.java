@@ -13,7 +13,7 @@ public class Family {
     private long id;
 
     private String uniqueName;
-    @OneToMany(mappedBy = "family")
+    @OneToMany(mappedBy = "family", fetch = FetchType.EAGER)
     private List<Child> children;
 
     @OneToMany(mappedBy = "family")

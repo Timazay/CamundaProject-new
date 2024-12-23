@@ -9,6 +9,13 @@
 
         <resource>family.bpmn</resource>
         <resource>form_1.form</resource>
+        <resource>choose-child.form</resource>
+        <resource>search.form</resource>
+        <resource>select.form</resource>
+        <resource>task.form</resource>
+        <resource>update.form</resource>
+        <resource>reports.form</resource>
+        <resource>complete.form</resource>
 
         <properties>
             <property name="isDeleteUponUndeploy">false</property>

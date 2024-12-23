@@ -21,10 +21,7 @@
     <bpmn:sequenceFlow id="Flow_1lucigl" sourceRef="Activity_1kop7bb" targetRef="Gateway_1cyld9e" />
     <bpmn:sequenceFlow id="Flow_0o3gqxy" sourceRef="Gateway_1cyld9e" targetRef="Event_04icub9" />
     <bpmn:sequenceFlow id="Flow_09n2dih" sourceRef="Activity_1y3q3fy" targetRef="Activity_1kop7bb" />
-    <bpmn:sequenceFlow id="Flow_0p01ci1" sourceRef="StartEvent_1" targetRef="Activity_01blua5" />
-    <bpmn:sequenceFlow id="Flow_0tx26qs" sourceRef="Activity_1o65n7z" targetRef="Activity_0mtwbyn" />
     <bpmn:sequenceFlow id="Flow_0r6g9dr" sourceRef="Activity_1vnh1bq" targetRef="Gateway_1cyld9e" />
-    <bpmn:sequenceFlow id="Flow_10s7jqx" sourceRef="Activity_0mtwbyn" targetRef="Activity_11icusv" />
     <bpmn:sequenceFlow id="Flow_1iqhg18" sourceRef="Gateway_0sy461v" targetRef="Activity_1o65n7z">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${type == 'CREATE'}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
@@ -47,34 +44,21 @@
       <bpmn:incoming>Flow_09n2dih</bpmn:incoming>
       <bpmn:outgoing>Flow_1lucigl</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:userTask id="Activity_1y3q3fy" name="Родитель выбирает существующее задание">
-      <bpmn:extensionElements>
-        <camunda:formData>
-          <camunda:formField id="title" type="string" />
-        </camunda:formData>
-      </bpmn:extensionElements>
+    <bpmn:userTask id="Activity_1y3q3fy" name="Родитель выбирает существующее задание" camunda:formRef="search" camunda:formRefBinding="latest">
+      <bpmn:extensionElements />
       <bpmn:incoming>Flow_1xua4lx</bpmn:incoming>
       <bpmn:outgoing>Flow_09n2dih</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:userTask id="Activity_1m8n8s9" name="Родитель ищет существующее задание">
-      <bpmn:extensionElements>
-        <camunda:formData>
-          <camunda:formField id="title" label="Название задания" type="string" />
-        </camunda:formData>
-      </bpmn:extensionElements>
+    <bpmn:userTask id="Activity_1m8n8s9" name="Родитель ищет существующее задание" camunda:formRef="search" camunda:formRefBinding="latest">
+      <bpmn:extensionElements />
       <bpmn:incoming>Flow_1a26j0o</bpmn:incoming>
       <bpmn:outgoing>Flow_1yos63h</bpmn:outgoing>
     </bpmn:userTask>
     <bpmn:sequenceFlow id="Flow_1a26j0o" sourceRef="Gateway_0sy461v" targetRef="Activity_1m8n8s9">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${type == 'UPDATE'}</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:userTask id="Activity_1o65n7z" name="Родитель назначает задание ребенку">
-      <bpmn:extensionElements>
-        <camunda:formData>
-          <camunda:formField id="description" label="Описание задания" type="string" />
-          <camunda:formField id="title" label="Название задания" type="string" />
-        </camunda:formData>
-      </bpmn:extensionElements>
+    <bpmn:userTask id="Activity_1o65n7z" name="Родитель назначает задание ребенку" camunda:formRef="task" camunda:formRefBinding="latest">
+      <bpmn:extensionElements />
       <bpmn:incoming>Flow_1iqhg18</bpmn:incoming>
       <bpmn:outgoing>Flow_0tx26qs</bpmn:outgoing>
     </bpmn:userTask>
@@ -89,33 +73,17 @@
       <bpmn:incoming>Flow_1yos63h</bpmn:incoming>
       <bpmn:outgoing>Flow_0gf3gno</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:userTask id="Activity_1h6sx57" name="Родитель изменяет задачу">
-      <bpmn:extensionElements>
-        <camunda:formData>
-          <camunda:formField id="description" label="Измени задание" type="string" />
-        </camunda:formData>
-      </bpmn:extensionElements>
+    <bpmn:userTask id="Activity_1h6sx57" name="Родитель изменяет задачу" camunda:formRef="update" camunda:formRefBinding="latest">
+      <bpmn:extensionElements />
       <bpmn:incoming>Flow_0gf3gno</bpmn:incoming>
       <bpmn:outgoing>Flow_0uyh2qn</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:serviceTask id="Activity_11icusv" name="Родитель отправляет задание ребенку" camunda:delegateExpression="${ MQSend }">
-      <bpmn:incoming>Flow_10s7jqx</bpmn:incoming>
+    <bpmn:serviceTask id="Activity_11icusv" name="Родитель отправляет задание ребенку" camunda:delegateExpression="${ mQSend }">
+      <bpmn:incoming>Flow_0tx26qs</bpmn:incoming>
       <bpmn:outgoing>Flow_1virqvu</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:serviceTask id="Activity_0mtwbyn" name="Сохранение в бд" camunda:delegateExpression="${bDSave}">
-      <bpmn:incoming>Flow_0tx26qs</bpmn:incoming>
-      <bpmn:outgoing>Flow_10s7jqx</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:userTask id="Activity_07v5g3x" name="Попадает на интерфейс с кнопками">
-      <bpmn:extensionElements>
-        <camunda:formData>
-          <camunda:formField id="type" label="Выберите что хотите сделать" type="enum">
-            <camunda:value id="CREATE" name="создать задание" />
-            <camunda:value id="CANCEL" name="отмена задания" />
-            <camunda:value id="UPDATE" name="изменить задание" />
-          </camunda:formField>
-        </camunda:formData>
-      </bpmn:extensionElements>
+    <bpmn:userTask id="Activity_07v5g3x" name="Попадает на интерфейс с кнопками" camunda:formRef="select" camunda:formRefBinding="latest">
+      <bpmn:extensionElements />
       <bpmn:incoming>Flow_1wj0f5u</bpmn:incoming>
       <bpmn:outgoing>Flow_0rb33ze</bpmn:outgoing>
     </bpmn:userTask>
@@ -125,12 +93,8 @@
     <bpmn:endEvent id="Event_04icub9">
       <bpmn:incoming>Flow_0o3gqxy</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:userTask id="Activity_1vp80vy" name="Родитель выбирает  ребенка">
-      <bpmn:extensionElements>
-        <camunda:formData>
-          <camunda:formField id="childName" label="Имя ребенка" type="string" />
-        </camunda:formData>
-      </bpmn:extensionElements>
+    <bpmn:userTask id="Activity_1vp80vy" name="Родитель выбирает  ребенка" camunda:formRef="choose-child" camunda:formRefBinding="latest">
+      <bpmn:extensionElements />
       <bpmn:incoming>Flow_1ly6xau</bpmn:incoming>
       <bpmn:outgoing>Flow_071tmou</bpmn:outgoing>
     </bpmn:userTask>
@@ -140,13 +104,22 @@
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="Flow_1wj0f5u" sourceRef="Activity_1npjd3y" targetRef="Activity_07v5g3x" />
     <bpmn:serviceTask id="Activity_01blua5" name="Родитель входит в систему" camunda:delegateExpression="${ parentAccess }">
-      <bpmn:incoming>Flow_0p01ci1</bpmn:incoming>
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="childList">
+            <camunda:list />
+          </camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_096iefs</bpmn:incoming>
       <bpmn:outgoing>Flow_1ly6xau</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:startEvent id="StartEvent_1" camunda:formRef="form_1" camunda:formRefBinding="latest">
       <bpmn:extensionElements />
-      <bpmn:outgoing>Flow_0p01ci1</bpmn:outgoing>
+      <bpmn:outgoing>Flow_096iefs</bpmn:outgoing>
     </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_096iefs" sourceRef="StartEvent_1" targetRef="Activity_01blua5" />
+    <bpmn:sequenceFlow id="Flow_0tx26qs" sourceRef="Activity_1o65n7z" targetRef="Activity_11icusv" />
   </bpmn:process>
   <bpmn:process id="Child_Process" isExecutable="true" camunda:historyTimeToLive="10">
     <bpmn:exclusiveGateway id="Gateway_02y7ssk">
@@ -154,13 +127,8 @@
       <bpmn:incoming>Flow_0vomwcj</bpmn:incoming>
       <bpmn:outgoing>Flow_1cgrbih</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:startEvent id="Event_1viw6ng">
-      <bpmn:extensionElements>
-        <camunda:formData>
-          <camunda:formField id="username" label="Имя ребенка" type="string" />
-          <camunda:formField id="password" label="пароль" type="string" />
-        </camunda:formData>
-      </bpmn:extensionElements>
+    <bpmn:startEvent id="Event_1viw6ng" camunda:formRef="form_1" camunda:formRefBinding="latest">
+      <bpmn:extensionElements />
       <bpmn:outgoing>Flow_1n0k2l9</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:exclusiveGateway id="Gateway_1e7mzu4">
@@ -172,21 +140,13 @@
       <bpmn:incoming>Flow_1n0k2l9</bpmn:incoming>
       <bpmn:outgoing>Flow_1i2xh97</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:userTask id="Activity_03di3h7" name="Ребенок выберает задание&#10;">
-      <bpmn:extensionElements>
-        <camunda:formData>
-          <camunda:formField id="title" label="Выбери задание" type="string" />
-        </camunda:formData>
-      </bpmn:extensionElements>
+    <bpmn:userTask id="Activity_03di3h7" name="Ребенок выберает задание&#10;" camunda:formRef="search" camunda:formRefBinding="latest">
+      <bpmn:extensionElements />
       <bpmn:incoming>Flow_1i2xh97</bpmn:incoming>
       <bpmn:outgoing>Flow_1vh52ww</bpmn:outgoing>
     </bpmn:userTask>
-    <bpmn:userTask id="Activity_1tx8y16" name="Ребенок выбирает отменить или  завершить задание">
-      <bpmn:extensionElements>
-        <camunda:formData>
-          <camunda:formField id="isAccept" label="Завершить задание?" type="boolean" />
-        </camunda:formData>
-      </bpmn:extensionElements>
+    <bpmn:userTask id="Activity_1tx8y16" name="Ребенок выбирает отменить или  завершить задание" camunda:formRef="complete" camunda:formRefBinding="latest">
+      <bpmn:extensionElements />
       <bpmn:incoming>Flow_0ewxmh7</bpmn:incoming>
       <bpmn:outgoing>Flow_0gn030c</bpmn:outgoing>
     </bpmn:userTask>
@@ -198,12 +158,8 @@
       <bpmn:incoming>Flow_0lefvz6</bpmn:incoming>
       <bpmn:outgoing>Flow_178l2q8</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:userTask id="Activity_1k3g3o9" name="Ребенок пишет объяснительную">
-      <bpmn:extensionElements>
-        <camunda:formData>
-          <camunda:formField id="report" type="string" />
-        </camunda:formData>
-      </bpmn:extensionElements>
+    <bpmn:userTask id="Activity_1k3g3o9" name="Ребенок пишет объяснительную" camunda:formRef="reports" camunda:formRefBinding="latest">
+      <bpmn:extensionElements />
       <bpmn:incoming>Flow_178l2q8</bpmn:incoming>
       <bpmn:outgoing>Flow_0uktl6u</bpmn:outgoing>
     </bpmn:userTask>
@@ -236,12 +192,8 @@
       <bpmn:incoming>Flow_05wirbo</bpmn:incoming>
       <bpmn:outgoing>Flow_0ekrpxd</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:userTask id="Activity_1qimxxr" name="Ребенок пишет отчет о выполненном задании">
-      <bpmn:extensionElements>
-        <camunda:formData>
-          <camunda:formField id="report" label="Напиши отчет" type="string" />
-        </camunda:formData>
-      </bpmn:extensionElements>
+    <bpmn:userTask id="Activity_1qimxxr" name="Ребенок пишет отчет о выполненном задании" camunda:formRef="reports" camunda:formRefBinding="latest">
+      <bpmn:extensionElements />
       <bpmn:incoming>Flow_0ekrpxd</bpmn:incoming>
       <bpmn:outgoing>Flow_0wiswbx</bpmn:outgoing>
     </bpmn:userTask>
@@ -292,9 +244,6 @@
       <bpmndi:BPMNShape id="Activity_09kot5x_di" bpmnElement="Activity_11icusv">
         <dc:Bounds x="1420" y="170" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0pubn7k_di" bpmnElement="Activity_0mtwbyn">
-        <dc:Bounds x="1180" y="170" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1i6tcxz_di" bpmnElement="Activity_07v5g3x">
         <dc:Bounds x="820" y="390" width="100" height="80" />
       </bpmndi:BPMNShape>
@@ -331,21 +280,9 @@
         <di:waypoint x="1210" y="430" />
         <di:waypoint x="1260" y="430" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0p01ci1_di" bpmnElement="Flow_0p01ci1">
-        <di:waypoint x="238" y="430" />
-        <di:waypoint x="310" y="430" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0tx26qs_di" bpmnElement="Flow_0tx26qs">
-        <di:waypoint x="1050" y="210" />
-        <di:waypoint x="1180" y="210" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0r6g9dr_di" bpmnElement="Flow_0r6g9dr">
         <di:waypoint x="1470" y="610" />
         <di:waypoint x="1470" y="455" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_10s7jqx_di" bpmnElement="Flow_10s7jqx">
-        <di:waypoint x="1280" y="210" />
-        <di:waypoint x="1420" y="210" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1iqhg18_di" bpmnElement="Flow_1iqhg18">
         <di:waypoint x="1000" y="405" />
@@ -386,6 +323,14 @@
       <bpmndi:BPMNEdge id="Flow_1wj0f5u_di" bpmnElement="Flow_1wj0f5u">
         <di:waypoint x="770" y="430" />
         <di:waypoint x="820" y="430" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_096iefs_di" bpmnElement="Flow_096iefs">
+        <di:waypoint x="238" y="430" />
+        <di:waypoint x="310" y="430" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0tx26qs_di" bpmnElement="Flow_0tx26qs">
+        <di:waypoint x="1050" y="210" />
+        <di:waypoint x="1420" y="210" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Participant_1002tlw_di" bpmnElement="Participant_1002tlw" isHorizontal="true">
         <dc:Bounds x="140" y="790" width="1530" height="600" />

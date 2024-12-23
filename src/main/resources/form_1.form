@@ -29,6 +29,16 @@
       },
       "id": "Field_0luo7cq",
       "key": "password"
+    },
+    {
+      "label": "Готово",
+      "action": "submit",
+      "type": "button",
+      "layout": {
+        "row": "Row_1gna71p",
+        "columns": null
+      },
+      "id": "Field_0puspv5"
     }
   ],
   "type": "default",

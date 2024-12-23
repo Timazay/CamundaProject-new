@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>guru.springframework</groupId>
-    <artifactId>sfg-jms</artifactId>
+    <artifactId>camunda</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>sfg-jms</name>
+    <name>CamundaProject</name>
     <description>Example JMS</description>
 
     <properties>
@@ -101,13 +101,6 @@
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.thymeleaf/thymeleaf -->
-        <dependency>
-            <groupId>org.thymeleaf</groupId>
-            <artifactId>thymeleaf</artifactId>
-            <version>3.1.2.RELEASE</version>
-        </dependency>
-
     </dependencies>
 
     <build>

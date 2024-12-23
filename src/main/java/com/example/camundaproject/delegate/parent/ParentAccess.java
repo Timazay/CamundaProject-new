@@ -1,10 +1,15 @@
 package com.example.camundaproject.delegate.parent;
 
+import com.example.camundaproject.entity.Child;
+import com.example.camundaproject.entity.Family;
 import com.example.camundaproject.entity.Parent;
 import com.example.camundaproject.service.ParentService;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class ParentAccess implements JavaDelegate {

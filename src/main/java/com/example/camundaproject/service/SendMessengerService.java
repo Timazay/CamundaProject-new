@@ -38,7 +38,8 @@ public class SendMessengerService {
 
     public Task readMsg(String msg){
         Config config = ConfigProvider.readChildDayConf(msg);
-        Child child = childRepository.getOne(config.getLong("id"));
+        long id = config.getLong("id");
+        Child child = childRepository.findChildById(id);
         Task task = new Task();
         task.setTitle(config.getString("title"));
         task.setDescription(config.getString("description"));
